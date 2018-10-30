@@ -1,86 +1,121 @@
 from flask import Flask, request, redirect, render_template
-import cgi
-import os
-
-
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
 @app.route("/")
 def index():
-    return render_template('hello_form.html')
+    username = request.args.get('Username')
+    username_error= request.args.get ('username_error')
+    passwd = request.args.get('Passwd')
+    passwd_error = request.args.get('passwd_error')
+    confi_pass = request.args.get('confi_pass')
+    confi_pass_error = request.args.get('confi_pass_error')
+    e_mail = request.args.get('E_mail')
+    e_mail_error = request.args.get('e_mail_error')
 
-@app.route("/hello", methods=['POST'])
-def hello():
-    first_name = request.form['first_name']
-    return render_template('hello_greeting.html', name=first_name)
+    return render_template('userform.html', username_error=username_error, 
+        passwd_error=passwd_error,
+        confi_pass_error=confi_pass_error,
+        e_mail_error=e_mail_error,
+        username=username,
+        passwd=passwd,
+        confi_pass=confi_pass,
+        e_mail=e_mail )
+
+@app.route("/welcome", methods=['POST'])
+def validate_login():
+
+    username = request.form['Username']
+    passwd = request.form['Passwd']
+    confi_pass = request.form['confi_pass']
+    e_mail = request.form['E_mail']
+
+    username_error = ''
+    passwd_error = ''
+    confi_pass_error=''
+    e_mail_error=''
+
+    numupper =0
+    numlower =0
+    numdigit=0
+    for c in username:
+        if c.isupper():
+            numupper = numupper + 1
+        if c.islower():
+            numlower = numlower + 1
+        if c.isdigit():
+            numdigit = numdigit + 1
 
 
-@app.route('/validate-time')
-def display_time_form():
-    return render_template('time_form.html')
-
-
-def is_integer(num):
-    try:
-        int(num)
-        return True
-    except ValueError:
-        return False
+    if numupper <= 0:
+        username_error=('username must contain at least one uppercase character')
+        
+       
+    if numlower <= 0:
+        username_error=('username must contain at least one lowercase character')
         
 
-@app.route('/validate-time', methods=['POST'])
-def validate_time():
+    if len(username)<6:
+        username_error = ('username must be greater than 6 characters')
+        
+          
+    if numdigit <= 0:
+        username_error= ('username must contain at least one number')
+           
 
-    hours = request.form['hours']
-    minutes = request.form['minutes']
+    numupper =0
+    numlower =0
+    numdigit=0
+    for c in passwd:
+        if c.isupper():
+           numupper = numupper + 1
+        if c.islower():
+            numlower = numlower + 1
+        if c.isdigit():
+            numdigit = numdigit + 1
 
-    hours_error = ''
-    minutes_error = ''
+    if numupper <= 0:
+        passwd_error=('password must contain at least one uppercase character')
+        passwd=''
 
-    if not is_integer(hours):
-        hours_error = 'Not a valid integer'
-        hours = ''
+    elif numlower <= 0:
+        passwd_error=('password must contain at least one lowercase character')
+        passwd=''
+
+    elif len(passwd)<8:
+        passwd_error = ('password must be greater than 8 characters')
+        passwd=''
+
     else:
-        hours = int(hours)
-        if hours > 23 or hours < 0:
-            hours_error = 'Hour value out of range (0-23)'
-            hours = ''
-
-    if not is_integer(minutes):
-        minutes_error = 'Not a valid integer'
-        minutes = ''
+        if numdigit <= 0:
+            passwd_error= ('password must contain at least one number')
+            passwd=''
+    
+    if confi_pass == passwd:
+        confi_pass=''
     else:
-        minutes = int(minutes)
-        if minutes > 59 or minutes < 0:
-            minutes_error = 'Minutes value out of range (0-59)'
-            minutes = ''
+        confi_pass_error= ('Password does not Match')   
 
-    if not minutes_error and not hours_error:
-        time = str(hours) + ':' + str(minutes)
-        return redirect('/valid-time?time={0}'.format(time))
+    if '@' not in e_mail or '.com' not in e_mail:
+        e_mail_error=('Not a valid email')
+
+
+
+    if not username_error and not passwd_error and not confi_pass_error and not e_mail_error:
+        return render_template('welcome.html', name= username)
     else:
-        return render_template('time_form.html', hours_error=hours_error,
-            minutes_error=minutes_error,
-            hours=hours,
-            minutes=minutes)
+        return redirect('/?username_error='+username_error+
+        '&passwd_error='+passwd_error+
+        '&confi_pass_error='+confi_pass_error+
+        '&e_mail_error='+e_mail_error+
+        '&username='+username+
+        '&passwd='+passwd+
+        '&confi_pass='+confi_pass+
+        '&e_mail='+e_mail)
 
-
-@app.route('/valid-time')
-def valid_time():
-    time = request.args.get('time')
-    return '<h1>You submitted {0}. Thanks for submitting a valid time!</h1>'.format(time)
-
-
-tasks = []
-
-@app.route('/todos', methods=['POST', 'GET'])
-def todos():
-
-    if request.method == 'POST':
-        task = request.form['task']
-        tasks.append(task)
-
-    return render_template('todos.html', title="TODOs", tasks=tasks)
+@app.route("/welcome", methods=['POST'])
+def welcome():
+    username = request.form['Username']
+    return render_template('welcome.html', name=username)
 
 app.run()

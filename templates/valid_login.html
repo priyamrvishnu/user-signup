@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+    <style>
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Validate username</h1>
+    <form method='POST'>
+        <label>Username: atleast 6 alpha numeric characters in length<br>
+               
+            <input name="username" type="text" value='{{username}}' />
+        </label>
+        <p class="error">{{username_error}}</p>
+
+        <label>Password:should contain the following:<br>
+            At least 1 letter between [a-z],At least 1 number between [0-9]<br>
+            At least 1 letter between [A-Z],At least 1 character from [$#@]<br>
+            Minimum length of transaction password: 6
+            passowrd should not be empty
+            <input name="passwd" type="text" value='{{passwd}}' />
+        </label>
+        <p class="error">{{passwd_error}}</p>
+        
+        <label>confirm password:Should match exactly the password<br>
+               
+            <input name="confi_pass" type="text" value='{{confi_pass}}' />
+        </label>
+        <p class="error">{{confi_pass_error}}</p>
+
+
+        <label>Email: Please enter a valid email
+               
+            <input name="e_mail" type="text" value='{{e_mail}}' />
+        </label>
+        <p class="error">{{e_mail_error}}</p>
+
+        <input type="submit" value="Validate" />
+    </form>
+</body>
+</html>

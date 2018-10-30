@@ -1,15 +1,31 @@
 <!doctype html>
 <html>
+    <head>
+        <title>Sign up</title>
+        <style>
+                .error { color: red; }
+        </style>
+    </head>
     <body>
-        <form action="/login" method="post">
+        <h3>User-Signup</h3>
+        <form action='/welcome' method="post">
             <label for="Username">Username:</label>
-            <input id="Username" type="text" name="Username" />
-            <label for="Password">Password:</label>
-            <input id="Password" type="text" name="Password" />
-            <label for="veri_pass">Verify Password:</label>
-            <input id="veri_pass" type="text" name="veri_pass" />
-            <label for="Email">Email(optional):</label>
-            <input id="Email" type="text" name="Email" />
+            <input id="Username" type="text" name="Username" value= '{{username}}'/>
+            
+            <span class="error">{{username_error}}</span>
+            <br><br>
+            <label for="Passwd">Password:</label>
+            <input id="Passwd" type="text" name="Passwd" />
+            <span class="error">{{passwd_error}}</span>
+            <br><br>
+            <label for="confi_pass">Verify Password:</label>
+            <input id="confi_pass" type="text" name="confi_pass"  />
+            <span class="error">{{confi_pass_error}}</span>
+            <br><br>
+            <label for="E_mail">Email(optional):</label>
+            <input id="E_mail" type="text" name="E_mail" value='{{e_mail}}' />
+            <span class="error">{{e_mail_error}}</span>
+            <br><br>
             <input type="submit" />
         </form>
     </body>
